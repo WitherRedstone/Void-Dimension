@@ -1,0 +1,6 @@
+{ 
+  "parent": "block/cube_all", 
+  "textures": { 
+    "all": "void_dimension:block/naught_stone" 
+  } 
+} 
