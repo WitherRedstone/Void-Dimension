@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "void_dimension:actinium/naught_stone"
+          "name": "void_dimension:naught_stone"
         }
       ],
       "rolls": 1.0
