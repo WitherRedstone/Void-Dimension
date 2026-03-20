@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": "minecraft:chiseled_polished_blackstone",
+    "B": "#c:gems/amethyst",
+    "C": "minecraft:echo_shard"
+  },
+  "pattern": [
+    "BCB",
+    "CAC",
+    "BCB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "void_dimension:naught_stone"
+  }
+}
