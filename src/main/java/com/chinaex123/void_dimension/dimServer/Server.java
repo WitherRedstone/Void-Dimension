@@ -69,6 +69,11 @@ public class Server {
         // 尝试点亮传送门
         if (attemptToLightPortal(level, clickedPos, player, heldItem)) {
             event.setCanceled(true);
+
+            // 播放右键摆臂动画（客户端）
+            if (!level.isClientSide()) {
+                player.swing(InteractionHand.MAIN_HAND, true);
+            }
         }
     }
 
@@ -90,7 +95,10 @@ public class Server {
 
             // 消耗耐久度（创造模式不消耗）
             if (!player.isCreative()) {
-                heldItem.shrink(1);
+                heldItem.setDamageValue(heldItem.getDamageValue() + 1);
+                if (heldItem.getDamageValue() >= heldItem.getMaxDamage()) {
+                    player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+                }
             }
             return true;
         }

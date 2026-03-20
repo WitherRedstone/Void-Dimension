@@ -10,12 +10,9 @@ import org.jetbrains.annotations.NotNull;
 public class ModItems {
     public static final DeferredRegister.Items ITEMS_REGISTER = DeferredRegister.createItems(VoidDimension.MOD_ID);
 
-//    public static final DeferredItem<@NotNull Item> NAUGHT_SHARD = ITEMS_REGISTER.registerSimpleItem("naught_shard",
-//            () -> new Item(new Item.Properties().durability(4)));
+    public static final DeferredItem<@NotNull Item> NAUGHT_SHARD = ITEMS_REGISTER.registerSimpleItem("naught_shard",
+            props -> props.durability(4));
 
-    public static final DeferredItem<@NotNull Item> NAUGHT_SHARD = ITEMS_REGISTER.registerSimpleItem("naught_shard");
-
-    // 注册到游戏
     public static void register(IEventBus eventBus) {
         ITEMS_REGISTER.register(eventBus);
     }
