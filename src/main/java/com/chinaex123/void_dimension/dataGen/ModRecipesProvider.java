@@ -1,8 +1,8 @@
 package com.chinaex123.void_dimension.dataGen;
 
 import com.chinaex123.void_dimension.VoidDimension;
-import com.chinaex123.void_dimension.block.ModBlocks;
-import com.chinaex123.void_dimension.item.ModItems;
+import com.chinaex123.void_dimension.init.ModBlocks;
+import com.chinaex123.void_dimension.init.ModItems;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;

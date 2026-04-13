@@ -1,7 +1,6 @@
-package com.chinaex123.void_dimension;
+package com.chinaex123.void_dimension.init;
 
-import com.chinaex123.void_dimension.block.ModBlocks;
-import com.chinaex123.void_dimension.item.ModItems;
+import com.chinaex123.void_dimension.VoidDimension;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;

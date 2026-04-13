@@ -1,8 +1,7 @@
-package com.chinaex123.void_dimension.block;
+package com.chinaex123.void_dimension.init;
 
 import com.chinaex123.void_dimension.VoidDimension;
-import com.chinaex123.void_dimension.dimServer.VoidPortal;
-import com.chinaex123.void_dimension.item.ModItems;
+import com.chinaex123.void_dimension.event.VoidPortal;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;

@@ -1,4 +1,4 @@
-package com.chinaex123.void_dimension.item;
+package com.chinaex123.void_dimension.init;
 
 import com.chinaex123.void_dimension.VoidDimension;
 import net.minecraft.world.item.Item;

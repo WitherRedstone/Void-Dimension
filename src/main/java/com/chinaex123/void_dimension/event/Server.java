@@ -1,7 +1,7 @@
-package com.chinaex123.void_dimension.dimServer;
+package com.chinaex123.void_dimension.event;
 
-import com.chinaex123.void_dimension.block.ModBlocks;
-import com.chinaex123.void_dimension.item.ModItems;
+import com.chinaex123.void_dimension.init.ModBlocks;
+import com.chinaex123.void_dimension.init.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -13,7 +13,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;

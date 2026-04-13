@@ -1,6 +1,6 @@
-package com.chinaex123.void_dimension.dimServer;
+package com.chinaex123.void_dimension.event;
 
-import com.chinaex123.void_dimension.block.ModBlocks;
+import com.chinaex123.void_dimension.init.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;

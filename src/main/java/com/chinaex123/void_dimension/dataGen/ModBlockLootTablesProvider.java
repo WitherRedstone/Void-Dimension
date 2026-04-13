@@ -1,6 +1,6 @@
 package com.chinaex123.void_dimension.dataGen;
 
-import com.chinaex123.void_dimension.block.ModBlocks;
+import com.chinaex123.void_dimension.init.ModBlocks;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
