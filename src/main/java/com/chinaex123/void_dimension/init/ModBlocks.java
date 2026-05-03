@@ -1,7 +1,7 @@
-package com.chinaex123.void_dimension.register;
+package com.chinaex123.void_dimension.init;
 
 import com.chinaex123.void_dimension.VoidDimension;
-import com.chinaex123.void_dimension.dimServer.VoidPortal;
+import com.chinaex123.void_dimension.event.VoidPortal;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;

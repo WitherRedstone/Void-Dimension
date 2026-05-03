@@ -1,7 +1,7 @@
 package com.chinaex123.void_dimension.dataGen;
 
-import com.chinaex123.void_dimension.register.ModBlocks;
-import com.chinaex123.void_dimension.register.ModItems;
+import com.chinaex123.void_dimension.init.ModBlocks;
+import com.chinaex123.void_dimension.init.ModItems;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;

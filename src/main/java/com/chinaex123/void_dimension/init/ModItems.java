@@ -1,4 +1,4 @@
-package com.chinaex123.void_dimension.register;
+package com.chinaex123.void_dimension.init;
 
 import com.chinaex123.void_dimension.VoidDimension;
 import net.minecraftforge.eventbus.api.IEventBus;

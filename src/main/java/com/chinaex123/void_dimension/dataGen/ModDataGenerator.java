@@ -18,7 +18,6 @@ public class ModDataGenerator {
         PackOutput packOutput = generator.getPackOutput();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
-        // 注册配方生成器
         generator.addProvider(event.includeServer(), new ModRecipesProvider(packOutput));
     }
 }

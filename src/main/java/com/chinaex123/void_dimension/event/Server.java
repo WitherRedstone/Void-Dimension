@@ -1,7 +1,7 @@
-package com.chinaex123.void_dimension.dimServer;
+package com.chinaex123.void_dimension.event;
 
-import com.chinaex123.void_dimension.register.ModBlocks;
-import com.chinaex123.void_dimension.register.ModItems;
+import com.chinaex123.void_dimension.init.ModBlocks;
+import com.chinaex123.void_dimension.init.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
