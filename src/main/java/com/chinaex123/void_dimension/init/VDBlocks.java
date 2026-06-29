@@ -12,7 +12,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Function;
 
-public class ModBlocks {
+public class VDBlocks {
     public static final DeferredRegister.Blocks BLOCKS_REGISTER =
             DeferredRegister.createBlocks(VoidDimension.MOD_ID);
 
@@ -31,7 +31,7 @@ public class ModBlocks {
 
     private static <T extends Block>DeferredBlock<T> registerBlock(String name, Function<BlockBehaviour.Properties, T> func, boolean shouldRegisterItem) {
         DeferredBlock<T> block = BLOCKS_REGISTER.registerBlock(name, func);
-        if (shouldRegisterItem) ModItems.ITEMS_REGISTER.registerSimpleBlockItem(block);
+        if (shouldRegisterItem) VDItems.ITEMS_REGISTER.registerSimpleBlockItem(block);
         return block;
     }
 

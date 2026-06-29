@@ -1,19 +1,20 @@
 package com.chinaex123.void_dimension.event;
 
-import com.chinaex123.void_dimension.init.ModBlocks;
+import com.chinaex123.void_dimension.init.VDBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 
 public class VoidPortalBreakEvent {
+
     /**
      * 监听方块破坏事件，当传送门框架关键方块或传送门方块被破坏时破坏整个传送门
      */
     @SubscribeEvent
-    public void onBlockBreak(BlockEvent.BreakEvent event) {
+    public void onBlockBreak(BreakBlockEvent event) {
         Level level = event.getPlayer().level();
 
         // 只在服务端处理
@@ -25,7 +26,7 @@ public class VoidPortalBreakEvent {
         BlockState brokenState = event.getState();
 
         // 如果破坏的是传送门框架方块（虚空石）
-        if (brokenState.is(ModBlocks.NAUGHT_STONE.get())) {
+        if (brokenState.is(VDBlocks.NAUGHT_STONE.get())) {
             // 检查是否破坏了关键框架方块
             if (isCriticalFrameBlock(level, brokenPos)) {
                 // 查找并破坏相关的传送门
@@ -33,7 +34,7 @@ public class VoidPortalBreakEvent {
             }
         }
         // 如果破坏的是传送门方块本身
-        else if (brokenState.is(ModBlocks.VOID_PORTAL.get())) {
+        else if (brokenState.is(VDBlocks.VOID_PORTAL.get())) {
             try {
                 // 获取被破坏传送门的朝向
                 Direction.Axis portalAxis = brokenState.getValue(VoidPortal.AXIS);
@@ -62,7 +63,7 @@ public class VoidPortalBreakEvent {
             BlockPos adjacentPos = pos.relative(direction);
             BlockState adjacentState = level.getBlockState(adjacentPos);
 
-            if (adjacentState.is(ModBlocks.VOID_PORTAL.get())) {
+            if (adjacentState.is(VDBlocks.VOID_PORTAL.get())) {
                 try {
                     Direction.Axis portalAxis = adjacentState.getValue(VoidPortal.AXIS);
                     Direction.Axis frameAxis = portalAxis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X;
@@ -82,12 +83,12 @@ public class VoidPortalBreakEvent {
                 BlockPos adjacentPos = pos.relative(direction);
                 BlockState adjacentState = level.getBlockState(adjacentPos);
 
-                if (adjacentState.is(ModBlocks.NAUGHT_STONE.get())) {
+                if (adjacentState.is(VDBlocks.NAUGHT_STONE.get())) {
                     for (Direction adjDir : Direction.values()) {
                         BlockPos portalCheckPos = adjacentPos.relative(adjDir);
                         BlockState portalState = level.getBlockState(portalCheckPos);
 
-                        if (portalState.is(ModBlocks.VOID_PORTAL.get())) {
+                        if (portalState.is(VDBlocks.VOID_PORTAL.get())) {
                             try {
                                 Direction.Axis portalAxis = portalState.getValue(VoidPortal.AXIS);
                                 Direction.Axis frameAxis = portalAxis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X;
@@ -275,7 +276,7 @@ public class VoidPortalBreakEvent {
     private boolean hasNearbyFrameBlocks(Level level, BlockPos pos) {
         int count = 0;
         for (Direction dir : Direction.values()) {
-            if (level.getBlockState(pos.relative(dir)).is(ModBlocks.NAUGHT_STONE.get())) {
+            if (level.getBlockState(pos.relative(dir)).is(VDBlocks.NAUGHT_STONE.get())) {
                 count++;
             }
         }
@@ -358,7 +359,7 @@ public class VoidPortalBreakEvent {
             BlockPos adjacentPos = brokenPos.relative(direction);
             BlockState adjacentState = level.getBlockState(adjacentPos);
 
-            if (adjacentState.is(ModBlocks.VOID_PORTAL.get())) {
+            if (adjacentState.is(VDBlocks.VOID_PORTAL.get())) {
                 try {
                     Direction.Axis portalAxis = adjacentState.getValue(VoidPortal.AXIS);
                     Direction.Axis frameAxis = portalAxis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X;
@@ -378,7 +379,7 @@ public class VoidPortalBreakEvent {
                     BlockPos checkPos = brokenPos.offset(dx, dy, dz);
                     BlockState checkState = level.getBlockState(checkPos);
 
-                    if (checkState.is(ModBlocks.VOID_PORTAL.get())) {
+                    if (checkState.is(VDBlocks.VOID_PORTAL.get())) {
                         try {
                             Direction.Axis portalAxis = checkState.getValue(VoidPortal.AXIS);
                             Direction.Axis frameAxis = portalAxis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X;
@@ -431,7 +432,7 @@ public class VoidPortalBreakEvent {
      */
     private boolean isSameAxisPortal(Level level, BlockPos pos, Direction.Axis expectedAxis) {
         BlockState state = level.getBlockState(pos);
-        if (!state.is(ModBlocks.VOID_PORTAL.get())) {
+        if (!state.is(VDBlocks.VOID_PORTAL.get())) {
             return false;
         }
 
@@ -510,7 +511,7 @@ public class VoidPortalBreakEvent {
             for (int x = 1; x <= portalWidth + 1; x++) {
                 for (int y = 1; y <= portalHeight + 1; y++) {
                     BlockPos destroyPos = cornerPos.relative(right, x).above(y);
-                    if (level.getBlockState(destroyPos).is(ModBlocks.VOID_PORTAL.get())) {
+                    if (level.getBlockState(destroyPos).is(VDBlocks.VOID_PORTAL.get())) {
                         level.destroyBlock(destroyPos, false); // false 表示不掉落物品
                     }
                 }
@@ -535,7 +536,7 @@ public class VoidPortalBreakEvent {
                     BlockPos checkPos = centerPos.offset(dx, dy, dz);
                     BlockState checkState = level.getBlockState(checkPos);
 
-                    if (checkState.is(ModBlocks.VOID_PORTAL.get())) {
+                    if (checkState.is(VDBlocks.VOID_PORTAL.get())) {
                         level.destroyBlock(checkPos, false);
                     }
                 }
@@ -552,7 +553,7 @@ public class VoidPortalBreakEvent {
      */
     private boolean isFrameOrPortalBlock(Level level, BlockPos pos) {
         BlockState state = level.getBlockState(pos);
-        return state.is(ModBlocks.NAUGHT_STONE.get()) || state.is(ModBlocks.VOID_PORTAL.get());
+        return state.is(VDBlocks.NAUGHT_STONE.get()) || state.is(VDBlocks.VOID_PORTAL.get());
     }
 
     /**

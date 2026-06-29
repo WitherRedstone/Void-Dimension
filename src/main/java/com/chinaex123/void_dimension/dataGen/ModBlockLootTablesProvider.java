@@ -1,6 +1,6 @@
 package com.chinaex123.void_dimension.dataGen;
 
-import com.chinaex123.void_dimension.init.ModBlocks;
+import com.chinaex123.void_dimension.init.VDBlocks;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
@@ -16,12 +16,12 @@ public class ModBlockLootTablesProvider extends BlockLootSubProvider {
 
     @Override
     protected void generate() {
-        dropSelf(ModBlocks.NAUGHT_STONE.get());
+        dropSelf(VDBlocks.NAUGHT_STONE.get());
     }
 
     @Override
     protected Iterable<Block> getKnownBlocks() {
-        return ModBlocks.BLOCKS_REGISTER.getEntries().stream()
+        return VDBlocks.BLOCKS_REGISTER.getEntries().stream()
                 .filter(entry -> !entry.getId().getPath().equals("void_portal"))
                 .map(Holder::value)::iterator;
     }

@@ -1,7 +1,7 @@
 package com.chinaex123.void_dimension.event;
 
-import com.chinaex123.void_dimension.init.ModBlocks;
-import com.chinaex123.void_dimension.init.ModItems;
+import com.chinaex123.void_dimension.init.VDBlocks;
+import com.chinaex123.void_dimension.init.VDItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -25,8 +25,13 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * 虚空维度传送门服务器端处理类
+ * <p>
+ * 处理传送门的创建和玩家传送逻辑
+ */
 @EventBusSubscriber(modid = "void_dimension")
-public class Server {
+public class PortalLogic {
 
     // 虚空维度资源键
     private static final ResourceKey<Level> VOID_DIMENSION_KEY = ResourceKey.create(
@@ -54,14 +59,14 @@ public class Server {
 
         // 检查玩家是否手持虚空碎片
         ItemStack heldItem = player.getItemInHand(InteractionHand.MAIN_HAND);
-        if (!heldItem.is(ModItems.NAUGHT_SHARD.get())) {
+        if (!heldItem.is(VDItems.NAUGHT_SHARD.get())) {
             return;
         }
 
         BlockPos clickedPos = event.getPos();
 
         // 检查点击的是否是虚空石方块
-        if (!level.getBlockState(clickedPos).is(ModBlocks.NAUGHT_STONE.get())) {
+        if (!level.getBlockState(clickedPos).is(VDBlocks.NAUGHT_STONE.get())) {
             return;
         }
 
@@ -392,7 +397,7 @@ public class Server {
      */
     private static void createPortalStructure(Level level, BlockPos minCorner,
                                               PortalDimensions dimensions, Direction.Axis axis) {
-        Block portalBlock = ModBlocks.VOID_PORTAL.get();
+        Block portalBlock = VDBlocks.VOID_PORTAL.get();
 
         // 关键修正：传送门的轴向应该与框架的短边方向一致
         // 如果框架是东西方向延伸（X轴），传送门应该是南北走向（Z轴）
@@ -437,7 +442,7 @@ public class Server {
      * 检查指定位置是否为传送门框架方块
      */
     private static boolean isFrameBlock(Level level, BlockPos pos) {
-        return level.getBlockState(pos).is(ModBlocks.NAUGHT_STONE.get());
+        return level.getBlockState(pos).is(VDBlocks.NAUGHT_STONE.get());
     }
 
     /**
@@ -507,8 +512,8 @@ public class Server {
      * 建造完整的返回传送门（2x4大小，包括底部边框）
      */
     private static void buildSimpleReturnPortal(Level level, BlockPos pos) {
-        Block frameBlock = ModBlocks.NAUGHT_STONE.get();
-        Block portalBlock = ModBlocks.VOID_PORTAL.get();
+        Block frameBlock = VDBlocks.NAUGHT_STONE.get();
+        Block portalBlock = VDBlocks.VOID_PORTAL.get();
 
         // 清理空间确保传送门能正确生成
         for (int y = 0; y < 5; y++) {
@@ -673,7 +678,7 @@ public class Server {
             for (int dz = -radius; dz <= radius; dz++) {
                 for (int dy = -radius/2; dy <= radius/2; dy++) {
                     BlockPos checkPos = center.offset(dx, dy, dz);
-                    if (level.getBlockState(checkPos).is(ModBlocks.VOID_PORTAL.get())) {
+                    if (level.getBlockState(checkPos).is(VDBlocks.VOID_PORTAL.get())) {
                         return checkPos;
                     }
                 }
@@ -748,8 +753,8 @@ public class Server {
      * @param pos 传送门位置
      */
     private static void buildNetherStylePortal(Level level, BlockPos pos) {
-        Block frameBlock = ModBlocks.NAUGHT_STONE.get();
-        Block portalBlock = ModBlocks.VOID_PORTAL.get();
+        Block frameBlock = VDBlocks.NAUGHT_STONE.get();
+        Block portalBlock = VDBlocks.VOID_PORTAL.get();
 
         // 清理空间（4x5区域）
         for (int x = 0; x < 4; x++) {

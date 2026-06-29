@@ -1,9 +1,9 @@
 package com.chinaex123.void_dimension;
 
 import com.chinaex123.void_dimension.event.VoidPortalBreakEvent;
-import com.chinaex123.void_dimension.init.ModBlocks;
-import com.chinaex123.void_dimension.init.ModCreativeTabs;
-import com.chinaex123.void_dimension.init.ModItems;
+import com.chinaex123.void_dimension.init.VDBlocks;
+import com.chinaex123.void_dimension.init.VDCreativeTabs;
+import com.chinaex123.void_dimension.init.VDItems;
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -18,8 +18,8 @@ public class VoidDimension {
 
     public VoidDimension(IEventBus modEventBus, ModContainer modContainer) {
         NeoForge.EVENT_BUS.register(new VoidPortalBreakEvent());
-        ModCreativeTabs.register(modEventBus);
-        ModItems.register(modEventBus);
-        ModBlocks.register(modEventBus);
+        VDCreativeTabs.register(modEventBus);
+        VDItems.register(modEventBus);
+        VDBlocks.register(modEventBus);
     }
 }
