@@ -1,6 +1,6 @@
-package com.chinaex123.void_dimension.dimServer;
+package com.chinaex123.void_dimension.event;
 
-import com.chinaex123.void_dimension.block.ModBlocks;
+import com.chinaex123.void_dimension.init.VDBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -91,7 +91,7 @@ public class VoidPortal extends Block {
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier applier, boolean intersects) {
         if (intersects && entity instanceof ServerPlayer player && !level.isClientSide()) {
-            Server.handlePortalTeleport(player, pos);
+            PortalLogic.handlePortalTeleport(player, pos);
         }
     }
 
@@ -106,6 +106,6 @@ public class VoidPortal extends Block {
      */
     @Override
     public boolean isPortalFrame(BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos) {
-        return state.is(ModBlocks.NAUGHT_STONE.get());
+        return state.is(VDBlocks.NAUGHT_STONE.get());
     }
 }

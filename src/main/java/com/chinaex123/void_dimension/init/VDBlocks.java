@@ -1,8 +1,7 @@
-package com.chinaex123.void_dimension.block;
+package com.chinaex123.void_dimension.init;
 
 import com.chinaex123.void_dimension.VoidDimension;
-import com.chinaex123.void_dimension.dimServer.VoidPortal;
-import com.chinaex123.void_dimension.item.ModItems;
+import com.chinaex123.void_dimension.event.VoidPortal;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -13,7 +12,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Function;
 
-public class ModBlocks {
+public class VDBlocks {
     public static final DeferredRegister.Blocks BLOCKS_REGISTER =
             DeferredRegister.createBlocks(VoidDimension.MOD_ID);
 
@@ -32,11 +31,10 @@ public class ModBlocks {
 
     private static <T extends Block>DeferredBlock<T> registerBlock(String name, Function<BlockBehaviour.Properties, T> func, boolean shouldRegisterItem) {
         DeferredBlock<T> block = BLOCKS_REGISTER.registerBlock(name, func);
-        if (shouldRegisterItem) ModItems.ITEMS_REGISTER.registerSimpleBlockItem(block);
+        if (shouldRegisterItem) VDItems.ITEMS_REGISTER.registerSimpleBlockItem(block);
         return block;
     }
 
-    // 注册到游戏
     public static void register(IEventBus eventBus){
         BLOCKS_REGISTER.register(eventBus);
     }

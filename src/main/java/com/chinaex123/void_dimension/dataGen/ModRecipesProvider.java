@@ -1,8 +1,8 @@
 package com.chinaex123.void_dimension.dataGen;
 
 import com.chinaex123.void_dimension.VoidDimension;
-import com.chinaex123.void_dimension.block.ModBlocks;
-import com.chinaex123.void_dimension.item.ModItems;
+import com.chinaex123.void_dimension.init.VDBlocks;
+import com.chinaex123.void_dimension.init.VDItems;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -49,7 +49,7 @@ public class ModRecipesProvider extends RecipeProvider {
         HolderGetter<Item> itemRegistryLookup = this.registries.lookupOrThrow(Registries.ITEM);
 
         // 归墟基石
-        ShapedRecipeBuilder.shaped(itemRegistryLookup, RecipeCategory.MISC, ModBlocks.NAUGHT_STONE.get().asItem())
+        ShapedRecipeBuilder.shaped(itemRegistryLookup, RecipeCategory.MISC, VDBlocks.NAUGHT_STONE.get().asItem())
                 .pattern("BCB")
                 .pattern("CAC")
                 .pattern("BCB")
@@ -59,7 +59,7 @@ public class ModRecipesProvider extends RecipeProvider {
                 .unlockedBy("has_naught_stone", has(Items.CHISELED_POLISHED_BLACKSTONE))
                 .save(output);
         // 归墟碎片
-        ShapedRecipeBuilder.shaped(itemRegistryLookup, RecipeCategory.MISC, ModItems.NAUGHT_SHARD.get().asItem())
+        ShapedRecipeBuilder.shaped(itemRegistryLookup, RecipeCategory.MISC, VDItems.NAUGHT_SHARD.get().asItem())
                 .pattern("BCB")
                 .pattern("CAC")
                 .pattern("BCB")

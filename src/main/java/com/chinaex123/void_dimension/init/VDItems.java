@@ -1,4 +1,4 @@
-package com.chinaex123.void_dimension.item;
+package com.chinaex123.void_dimension.init;
 
 import com.chinaex123.void_dimension.VoidDimension;
 import net.minecraft.world.item.Item;
@@ -7,7 +7,7 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.NotNull;
 
-public class ModItems {
+public class VDItems {
     public static final DeferredRegister.Items ITEMS_REGISTER = DeferredRegister.createItems(VoidDimension.MOD_ID);
 
     public static final DeferredItem<@NotNull Item> NAUGHT_SHARD = ITEMS_REGISTER.registerSimpleItem("naught_shard",
