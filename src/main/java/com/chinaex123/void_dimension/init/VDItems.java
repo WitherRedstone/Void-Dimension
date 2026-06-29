@@ -1,4 +1,4 @@
-package com.chinaex123.void_dimension.register;
+package com.chinaex123.void_dimension.init;
 
 import com.chinaex123.void_dimension.VoidDimension;
 import net.minecraft.world.item.Item;
@@ -6,7 +6,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-public class ModItems {
+public class VDItems {
     public static final DeferredRegister.Items ITEMS_REGISTER =
             DeferredRegister.createItems(VoidDimension.MOD_ID);
 

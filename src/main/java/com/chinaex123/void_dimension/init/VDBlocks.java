@@ -1,7 +1,7 @@
-package com.chinaex123.void_dimension.register;
+package com.chinaex123.void_dimension.init;
 
 import com.chinaex123.void_dimension.VoidDimension;
-import com.chinaex123.void_dimension.dimServer.VoidPortal;
+import com.chinaex123.void_dimension.event.VoidPortal;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -14,7 +14,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
-public class ModBlocks {
+public class VDBlocks {
     // 创建方块注册器实例
     public static final DeferredRegister.Blocks BLOCK_REGISTER =
             DeferredRegister.createBlocks(VoidDimension.MOD_ID);
@@ -36,7 +36,7 @@ public class ModBlocks {
 
     // 注册一个方块物品到物品注册表中
     public static <T extends Block> void registerBlockItems(String name, DeferredBlock<T> block) {
-        ModItems.ITEMS_REGISTER.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
+        VDItems.ITEMS_REGISTER.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
     }
 
     // 注册方块的同时注册方块物品
