@@ -1,0 +1,10 @@
+{
+  "itemGroup.void_dimension": "Void Dimension",
+
+  "item.void_dimension.naught_shard": "Naught Shard",
+  "block.void_dimension.naught_stone": "Naught Stone",
+  "block.void_dimension.void_portal": "Void Portal",
+
+  "dimension.void_dimension.void": "Void Dimension",
+  "biome.void_dimension.void": "Void"
+}
