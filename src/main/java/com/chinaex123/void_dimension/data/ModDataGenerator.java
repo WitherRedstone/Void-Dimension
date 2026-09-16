@@ -1,4 +1,4 @@
-package com.chinaex123.void_dimension.dataGen;
+package com.chinaex123.void_dimension.data;
 
 import com.chinaex123.void_dimension.VoidDimension;
 import net.minecraft.data.loot.LootTableProvider;
@@ -20,5 +20,7 @@ public class ModDataGenerator {
                 )), lookupProvider)));
 
         event.createProvider(ModRecipesProvider.Runner::new);
+        event.createProvider(ModBlockTagsProvider::new);
+        event.createProvider(ModWorldGenProvider::new);
     }
 }
