@@ -1,4 +1,4 @@
-package com.chinaex123.void_dimension.dataGen;
+package com.chinaex123.void_dimension.data;
 
 import com.chinaex123.void_dimension.init.VDBlocks;
 import com.chinaex123.void_dimension.init.VDItems;
