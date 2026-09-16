@@ -1,7 +1,7 @@
-package com.chinaex123.void_dimension.dataGen;
+package com.chinaex123.void_dimension.data;
 
-import com.chinaex123.void_dimension.init.ModBlocks;
-import com.chinaex123.void_dimension.init.ModItems;
+import com.chinaex123.void_dimension.init.VDBlocks;
+import com.chinaex123.void_dimension.init.VDItems;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -24,7 +24,7 @@ public class ModRecipesProvider extends RecipeProvider implements IConditionBuil
 
         // 归墟基石
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC,
-                        ModBlocks.NAUGHT_STONE.get())
+                        VDBlocks.NAUGHT_STONE.get())
                 .pattern("BCB")
                 .pattern("CAC")
                 .pattern("BCB")
@@ -36,7 +36,7 @@ public class ModRecipesProvider extends RecipeProvider implements IConditionBuil
         
         // 归墟碎片
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC,
-                        ModItems.NAUGHT_SHARD.get())
+                        VDItems.NAUGHT_SHARD.get())
                 .pattern("BCB")
                 .pattern("CAC")
                 .pattern("BCB")
