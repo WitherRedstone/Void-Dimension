@@ -20,5 +20,7 @@ public class ModDataGenerator {
                 )), lookupProvider)));
 
         event.createProvider(ModRecipesProvider.Runner::new);
+        event.createProvider(ModBlockTagsProvider::new);
+        event.createProvider(ModWorldGenProvider::new);
     }
 }
