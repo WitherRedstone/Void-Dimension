@@ -1,6 +1,6 @@
 package com.chinaex123.void_dimension.event;
 
-import com.chinaex123.void_dimension.init.ModBlocks;
+import com.chinaex123.void_dimension.init.VDBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -8,9 +8,23 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+/**
+ * 虚空传送门破坏事件处理类。
+ * <p>
+ * 功能：
+ * 1. 当传送门框架关键方块（虚空石）被破坏时，破坏整个传送门结构；
+ * 2. 当传送门方块本身被破坏时，破坏整个传送门结构；
+ * 3. 提供多种容错策略，即使框架不完整也能尽量正确定位并清除传送门。
+ */
 public class VoidPortalBreakEvent {
+
     /**
-     * 监听方块破坏事件，当传送门框架关键方块或传送门方块被破坏时破坏整个传送门
+     * 监听方块破坏事件。
+     * <p>
+     * 当传送门框架关键方块或传送门方块被破坏时，破坏整个传送门。
+     * 只在服务端处理，避免客户端重复执行。
+     *
+     * @param event 方块破坏事件
      */
     @SubscribeEvent
     public void onBlockBreak(BlockEvent.BreakEvent event) {
@@ -25,7 +39,7 @@ public class VoidPortalBreakEvent {
         BlockState brokenState = event.getState();
 
         // 如果破坏的是传送门框架方块（虚空石）
-        if (brokenState.is(ModBlocks.NAUGHT_STONE.get())) {
+        if (brokenState.is(VDBlocks.NAUGHT_STONE.get())) {
             // 检查是否破坏了关键框架方块
             if (isCriticalFrameBlock(level, brokenPos)) {
                 // 查找并破坏相关的传送门
@@ -33,11 +47,11 @@ public class VoidPortalBreakEvent {
             }
         }
         // 如果破坏的是传送门方块本身
-        else if (brokenState.is(ModBlocks.VOID_PORTAL.get())) {
+        else if (brokenState.is(VDBlocks.VOID_PORTAL.get())) {
             try {
                 // 获取被破坏传送门的朝向
                 Direction.Axis portalAxis = brokenState.getValue(VoidPortal.AXIS);
-                // 根据传送门朝向确定框架方向
+                // 根据传送门朝向确定框架方向（传送门轴向与框架轴向互相垂直）
                 Direction.Axis frameAxis = portalAxis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X;
 
                 // 破坏整个传送门结构
@@ -49,11 +63,12 @@ public class VoidPortalBreakEvent {
     }
 
     /**
-     * 判断被破坏的方块是否为传送门框架的关键方块
-     * 只有破坏关键框架方块才会触发整个传送门的破坏
+     * 判断被破坏的方块是否为传送门框架的关键方块。
+     * <p>
+     * 只有破坏关键框架方块才会触发整个传送门的破坏。
      *
      * @param level 世界对象
-     * @param pos 被破坏方块的位置
+     * @param pos   被破坏方块的位置
      * @return 如果为关键框架方块返回 true，否则返回 false
      */
     private boolean isCriticalFrameBlock(Level level, BlockPos pos) {
@@ -62,7 +77,7 @@ public class VoidPortalBreakEvent {
             BlockPos adjacentPos = pos.relative(direction);
             BlockState adjacentState = level.getBlockState(adjacentPos);
 
-            if (adjacentState.is(ModBlocks.VOID_PORTAL.get())) {
+            if (adjacentState.is(VDBlocks.VOID_PORTAL.get())) {
                 try {
                     Direction.Axis portalAxis = adjacentState.getValue(VoidPortal.AXIS);
                     Direction.Axis frameAxis = portalAxis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X;
@@ -82,12 +97,12 @@ public class VoidPortalBreakEvent {
                 BlockPos adjacentPos = pos.relative(direction);
                 BlockState adjacentState = level.getBlockState(adjacentPos);
 
-                if (adjacentState.is(ModBlocks.NAUGHT_STONE.get())) {
+                if (adjacentState.is(VDBlocks.NAUGHT_STONE.get())) {
                     for (Direction adjDir : Direction.values()) {
                         BlockPos portalCheckPos = adjacentPos.relative(adjDir);
                         BlockState portalState = level.getBlockState(portalCheckPos);
 
-                        if (portalState.is(ModBlocks.VOID_PORTAL.get())) {
+                        if (portalState.is(VDBlocks.VOID_PORTAL.get())) {
                             try {
                                 Direction.Axis portalAxis = portalState.getValue(VoidPortal.AXIS);
                                 Direction.Axis frameAxis = portalAxis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X;
@@ -108,10 +123,13 @@ public class VoidPortalBreakEvent {
     }
 
     /**
-     * 检查位置是否在传送门框架的边缘上
+     * 检查位置是否在传送门框架的边缘上。
+     * <p>
+     * 与 isOnPortalFrameEdge 相比，此方法使用改进的角落查找策略，
+     * 并放宽了边框判定条件，支持不完整的框架结构。
      *
-     * @param level 世界对象
-     * @param framePos 待检测的框架方块位置
+     * @param level     世界对象
+     * @param framePos  待检测的框架方块位置
      * @param portalPos 传送门方块位置
      * @param frameAxis 框架轴向
      * @return 是否为框架边缘
@@ -158,10 +176,14 @@ public class VoidPortalBreakEvent {
     }
 
     /**
-     * 查找传送门框架的角落位置（改进版本）
-     * 采用多种策略查找角落，确保在框架不完整时也能正确定位
+     * 查找传送门框架的角落位置。
+     * <p>
+     * 采用多种策略查找角落，确保在框架不完整时也能正确定位：
+     * 1. 先尝试常规角落查找；
+     * 2. 失败后改为向下扫描找底部再找角落；
+     * 3. 仍失败则扫描周围区域寻找可能的角落。
      *
-     * @param level 世界对象
+     * @param level     世界对象
      * @param portalPos 传送门位置
      * @param frameAxis 框架轴向
      * @return 角落位置，找不到则返回 null
@@ -184,9 +206,11 @@ public class VoidPortalBreakEvent {
     }
 
     /**
-     * 验证角落位置是否有效
+     * 验证角落位置是否有效。
+     * <p>
+     * 判定标准：角落的右侧或上方至少有一个框架或传送门方块。
      *
-     * @param level 世界对象
+     * @param level     世界对象
      * @param cornerPos 角落位置
      * @param frameAxis 框架轴向
      * @return 是否有效
@@ -204,10 +228,12 @@ public class VoidPortalBreakEvent {
     }
 
     /**
-     * 通过向下扫描查找角落
-     * 适用于底部框架完整但侧边不完整的场景
+     * 通过向下扫描查找角落。
+     * <p>
+     * 适用于底部框架完整但侧边不完整的场景：
+     * 先垂直向下走到框架底部，再向框架负方向移动到边缘。
      *
-     * @param level 世界对象
+     * @param level     世界对象
      * @param portalPos 传送门位置
      * @param frameAxis 框架轴向
      * @return 角落位置
@@ -230,10 +256,12 @@ public class VoidPortalBreakEvent {
     }
 
     /**
-     * 通过区域扫描查找角落
-     * 适用于框架严重损坏的场景
+     * 通过区域扫描查找角落。
+     * <p>
+     * 适用于框架严重损坏的场景：反复向负方向和下方移动，
+     * 直到找到仍属于框架或传送门的方块作为角落。
      *
-     * @param level 世界对象
+     * @param level     世界对象
      * @param portalPos 传送门位置
      * @param frameAxis 框架轴向
      * @return 角落位置，找不到则返回 null
@@ -266,16 +294,16 @@ public class VoidPortalBreakEvent {
     }
 
     /**
-     * 检查附近是否有其他框架方块
+     * 检查附近是否有其他框架方块。
      *
      * @param level 世界对象
-     * @param pos 检测位置
+     * @param pos   检测位置
      * @return 是否有至少 2 个相邻框架方块
      */
     private boolean hasNearbyFrameBlocks(Level level, BlockPos pos) {
         int count = 0;
         for (Direction dir : Direction.values()) {
-            if (level.getBlockState(pos.relative(dir)).is(ModBlocks.NAUGHT_STONE.get())) {
+            if (level.getBlockState(pos.relative(dir)).is(VDBlocks.NAUGHT_STONE.get())) {
                 count++;
             }
         }
@@ -283,11 +311,13 @@ public class VoidPortalBreakEvent {
     }
 
     /**
-     * 检查指定位置是否在传送门框架的边缘上
-     * 通过计算相对于框架角落的位置来判断是否位于四条边框上
+     * 检查指定位置是否在传送门框架的边缘上。
+     * <p>
+     * 通过计算相对于框架角落的位置来判断是否位于四条边框上。
+     * 判定条件比改进版更严格，要求坐标严格落在边框范围内。
      *
-     * @param level 世界对象
-     * @param framePos 待检测的框架方块位置
+     * @param level     世界对象
+     * @param framePos  待检测的框架方块位置
      * @param portalPos 传送门方块位置（用于定位框架）
      * @param frameAxis 框架的轴向（X 轴表示东西走向，Z 轴表示南北走向）
      * @return 如果在框架边缘上返回 true，否则返回 false
@@ -330,11 +360,12 @@ public class VoidPortalBreakEvent {
     }
 
     /**
-     * 获取相对位置在指定方向上的坐标值
-     * 根据框架轴向提取对应的坐标分量（X 轴或 Z 轴）
+     * 获取相对位置在指定方向上的坐标值。
+     * <p>
+     * 根据框架轴向提取对应的坐标分量（X 轴或 Z 轴）。
      *
      * @param relativePos 相对位置
-     * @param direction 方向（用于确定提取哪个坐标轴）
+     * @param direction   方向（用于确定提取哪个坐标轴）
      * @return 返回对应方向的坐标值，如果不是 EAST 或 SOUTH 则返回 0
      */
     private int getRelativeCoordinate(BlockPos relativePos, Direction direction) {
@@ -346,10 +377,12 @@ public class VoidPortalBreakEvent {
     }
 
     /**
-     * 查找并破坏相关的传送门
-     * 扩大了搜索范围，确保能正确找到并破坏所有传送门方块
+     * 查找并破坏相关的传送门。
+     * <p>
+     * 先检查与被破坏方块直接相邻的位置，若没有找到则
+     * 扩大搜索范围到周围 5x5x5 区域，确保能正确找到并破坏传送门方块。
      *
-     * @param level 世界对象
+     * @param level     世界对象
      * @param brokenPos 被破坏的方块位置
      */
     private void destroyRelatedPortals(Level level, BlockPos brokenPos) {
@@ -358,7 +391,7 @@ public class VoidPortalBreakEvent {
             BlockPos adjacentPos = brokenPos.relative(direction);
             BlockState adjacentState = level.getBlockState(adjacentPos);
 
-            if (adjacentState.is(ModBlocks.VOID_PORTAL.get())) {
+            if (adjacentState.is(VDBlocks.VOID_PORTAL.get())) {
                 try {
                     Direction.Axis portalAxis = adjacentState.getValue(VoidPortal.AXIS);
                     Direction.Axis frameAxis = portalAxis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X;
@@ -378,7 +411,7 @@ public class VoidPortalBreakEvent {
                     BlockPos checkPos = brokenPos.offset(dx, dy, dz);
                     BlockState checkState = level.getBlockState(checkPos);
 
-                    if (checkState.is(ModBlocks.VOID_PORTAL.get())) {
+                    if (checkState.is(VDBlocks.VOID_PORTAL.get())) {
                         try {
                             Direction.Axis portalAxis = checkState.getValue(VoidPortal.AXIS);
                             Direction.Axis frameAxis = portalAxis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X;
@@ -395,10 +428,12 @@ public class VoidPortalBreakEvent {
     }
 
     /**
-     * 查找传送门框架的角落位置（左下角）
-     * 从传送门方块出发，先向框架负方向移动到边缘，再向下移动到底部
+     * 查找传送门框架的角落位置。
+     * <p>
+     * 从传送门方块出发，先向框架负方向移动到边缘，再向下移动到底部。
+     * 同时识别框架方块与同轴向的传送门方块。
      *
-     * @param level 世界对象
+     * @param level     世界对象
      * @param portalPos 传送门方块的起始位置
      * @param frameAxis 框架的轴向（X 轴或 Z 轴）
      * @return 框架角落的位置坐标
@@ -421,17 +456,19 @@ public class VoidPortalBreakEvent {
     }
 
     /**
-     * 检查指定位置是否为相同轴向的传送门方块
-     * 用于判断传送门方块是否属于同一个框架结构
+     * 检查指定位置是否为相同轴向的传送门方块。
+     * <p>
+     * 用于判断传送门方块是否属于同一个框架结构：
+     * 只有框架轴向与期望值一致时才算同一结构。
      *
-     * @param level 世界对象
-     * @param pos 待检测的位置
+     * @param level        世界对象
+     * @param pos          待检测的位置
      * @param expectedAxis 期望的框架轴向
      * @return 如果是相同轴向的传送门方块返回 true，否则返回 false
      */
     private boolean isSameAxisPortal(Level level, BlockPos pos, Direction.Axis expectedAxis) {
         BlockState state = level.getBlockState(pos);
-        if (!state.is(ModBlocks.VOID_PORTAL.get())) {
+        if (!state.is(VDBlocks.VOID_PORTAL.get())) {
             return false;
         }
 
@@ -445,10 +482,12 @@ public class VoidPortalBreakEvent {
     }
 
     /**
-     * 计算传送门框架的尺寸
-     * 从角落位置开始，分别向上和向右统计框架方块数量
+     * 计算传送门框架的尺寸。
+     * <p>
+     * 从角落位置开始，分别向上和向右统计框架方块数量，
+     * 得到框架的高度与宽度。
      *
-     * @param level 世界对象
+     * @param level     世界对象
      * @param cornerPos 框架角落位置（左下角）
      * @param frameAxis 框架轴向
      * @return 包含宽度和高度的 PortalDimensions 对象
@@ -460,11 +499,13 @@ public class VoidPortalBreakEvent {
     }
 
     /**
-     * 计算指定方向上的框架方块数量
-     * 用于统计传送门框架在某个方向上的长度
+     * 计算指定方向上的框架方块数量。
+     * <p>
+     * 用于统计传送门框架在某个方向上的长度，
+     * 遇到框架方块或同轴向传送门方块都会计入。
      *
-     * @param level 世界对象
-     * @param start 起始位置
+     * @param level     世界对象
+     * @param start     起始位置
      * @param direction 统计方向
      * @param frameAxis 框架轴向（用于判断同轴向传送门）
      * @return 框架方块的总数量（包含起始位置）
@@ -482,10 +523,12 @@ public class VoidPortalBreakEvent {
     }
 
     /**
-     * 破坏传送门结构
-     * 使用增强的角落查找方法，并提供备用清除方案
+     * 破坏传送门结构。
+     * <p>
+     * 使用增强的角落查找方法定位框架，再按尺寸清除内部的传送门方块。
+     * 若无法找到角落，则退化为直接清除附近的传送门方块。
      *
-     * @param level 世界对象
+     * @param level     世界对象
      * @param portalPos 传送门位置
      * @param frameAxis 框架轴向
      */
@@ -510,7 +553,7 @@ public class VoidPortalBreakEvent {
             for (int x = 1; x <= portalWidth + 1; x++) {
                 for (int y = 1; y <= portalHeight + 1; y++) {
                     BlockPos destroyPos = cornerPos.relative(right, x).above(y);
-                    if (level.getBlockState(destroyPos).is(ModBlocks.VOID_PORTAL.get())) {
+                    if (level.getBlockState(destroyPos).is(VDBlocks.VOID_PORTAL.get())) {
                         level.destroyBlock(destroyPos, false); // false 表示不掉落物品
                     }
                 }
@@ -521,10 +564,12 @@ public class VoidPortalBreakEvent {
     }
 
     /**
-     * 清除附近的传送门方块
-     * 当无法确定准确的传送门结构时使用此方法
+     * 清除附近的传送门方块。
+     * <p>
+     * 当无法确定准确的传送门结构时使用此方法，
+     * 在 11x11x11 范围内清除所有传送门方块。
      *
-     * @param level 世界对象
+     * @param level     世界对象
      * @param centerPos 中心位置
      */
     private void clearNearbyPortalBlocks(Level level, BlockPos centerPos) {
@@ -535,7 +580,7 @@ public class VoidPortalBreakEvent {
                     BlockPos checkPos = centerPos.offset(dx, dy, dz);
                     BlockState checkState = level.getBlockState(checkPos);
 
-                    if (checkState.is(ModBlocks.VOID_PORTAL.get())) {
+                    if (checkState.is(VDBlocks.VOID_PORTAL.get())) {
                         level.destroyBlock(checkPos, false);
                     }
                 }
@@ -544,20 +589,21 @@ public class VoidPortalBreakEvent {
     }
 
     /**
-     * 检查指定位置是否为传送门框架方块或传送门方块
+     * 检查指定位置是否为传送门框架方块或传送门方块。
      *
      * @param level 世界对象
-     * @param pos 待检测的位置
+     * @param pos   待检测的位置
      * @return 如果是框架方块或传送门方块返回 true，否则返回 false
      */
     private boolean isFrameOrPortalBlock(Level level, BlockPos pos) {
         BlockState state = level.getBlockState(pos);
-        return state.is(ModBlocks.NAUGHT_STONE.get()) || state.is(ModBlocks.VOID_PORTAL.get());
+        return state.is(VDBlocks.NAUGHT_STONE.get()) || state.is(VDBlocks.VOID_PORTAL.get());
     }
 
     /**
-     * 获取指定轴向的正方向
-     * X 轴对应东方，Z 轴对应南方
+     * 获取指定轴向的正方向。
+     * <p>
+     * X 轴对应东方，Z 轴对应南方。
      *
      * @param axis 框架轴向
      * @return 对应的正方向（EAST 或 SOUTH）
@@ -567,8 +613,9 @@ public class VoidPortalBreakEvent {
     }
 
     /**
-     * 获取指定轴向的负方向
-     * X 轴对应西方，Z 轴对应北方
+     * 获取指定轴向的负方向。
+     * <p>
+     * X 轴对应西方，Z 轴对应北方。
      *
      * @param axis 框架轴向
      * @return 对应的负方向（WEST 或 NORTH）
@@ -578,8 +625,9 @@ public class VoidPortalBreakEvent {
     }
 
     /**
-     * 传送门尺寸数据类
+     * 传送门尺寸数据类。
+     * <p>
+     * 用于保存框架的宽度与高度。
      */
-    private record PortalDimensions(int width, int height) {
-    }
+    private record PortalDimensions(int width, int height) { }
 }
