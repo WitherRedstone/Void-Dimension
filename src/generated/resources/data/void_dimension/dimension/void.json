@@ -1,0 +1,12 @@
+{
+  "type": "void_dimension:void_dimension_type",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "void_dimension:void_biome",
+      "features": false,
+      "lakes": false,
+      "layers": []
+    }
+  }
+}
