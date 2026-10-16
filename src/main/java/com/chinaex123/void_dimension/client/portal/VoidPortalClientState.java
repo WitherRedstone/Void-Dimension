@@ -1,4 +1,4 @@
-package com.chinaex123.void_dimension.client;
+package com.chinaex123.void_dimension.client.portal;
 
 import com.chinaex123.void_dimension.event.PortalTeleportManager;
 
@@ -27,7 +27,7 @@ public final class VoidPortalClientState {
     /**
      * 标记当前 tick 玩家处于传送门内。
      * <p>
-     * 由传送门检测逻辑每 tick 调用，用于在 {@link #tick()} 中推进计时器。
+     * 由传送门检测逻辑每 tick 调用。
      */
     public static void markInsidePortal() {
         insidePortalThisTick = true;

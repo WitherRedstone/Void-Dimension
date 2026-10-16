@@ -1,5 +1,6 @@
 package com.chinaex123.void_dimension.event;
 
+import com.chinaex123.void_dimension.client.portal.VoidPortalClientState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.loading.FMLEnvironment;
 
@@ -30,7 +31,7 @@ public final class VoidPortalClientHooks {
      */
     private static final class ClientOnly {
         static void markInsidePortal() {
-            com.chinaex123.void_dimension.client.VoidPortalClientState.markInsidePortal();
+            VoidPortalClientState.markInsidePortal();
         }
     }
 }
