@@ -14,26 +14,19 @@ import net.minecraft.world.level.biome.BiomeSpecialEffects;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 
 /**
- * 虚空维度生物群系定义类。
+ * 虚空维度群系定义。
  * <p>
- * 功能：
- * 1. 定义并注册虚空维度使用的 "void" 生物群系；
- * 2. 配置该群系的怪物生成规则、地形生成设置与视觉效果（天空、雾、水色等）。
+ * 负责构建并注册虚空维度所使用的群系，包括生物生成设置、
+ * 地形生成设置以及各类环境属性（天空、雾、水等颜色）。
  */
 public class VDBiomes {
 
     /** 虚空群系的资源键，用于在注册表中定位该群系 */
     public static final ResourceKey<Biome> VOID_BIOME = ResourceKey.create(Registries.BIOME,
             Identifier.fromNamespaceAndPath(VoidDimension.MOD_ID, "void"));
-    
+
     /**
      * 构建虚空群系实例。
-     * <p>
-     * 配置内容：
-     * 1. 怪物生成：蜘蛛、僵尸、僵尸村民、骷髅、苦力怕、史莱姆、末影人、女巫；
-     * 2. 不生成被动生物（creatureGenerationProbability 设为 0）；
-     * 3. 地形生成：使用上下文提供的已放置特征与配置雕刻器；
-     * 4. 视觉效果：指定天空、雾、水、水雾颜色，无降水。
      *
      * @param context 数据包引导上下文，提供已放置特征与雕刻器的注册表查询
      * @return 构建完成的虚空群系
@@ -42,7 +35,6 @@ public class VDBiomes {
         MobSpawnSettings.Builder spawnSettings = new MobSpawnSettings.Builder();
 
         // 怪物生成
-//        BiomeDefaultFeatures.commonSpawns(spawnSettings);
         spawnSettings.addSpawn(MobCategory.MONSTER, 100, new MobSpawnSettings.SpawnerData(
                 EntityTypes.SPIDER, 4, 4));
         spawnSettings.addSpawn(MobCategory.MONSTER, 95, new MobSpawnSettings.SpawnerData(
@@ -84,9 +76,9 @@ public class VDBiomes {
     }
 
     /**
-     * 引导入口，将虚空群系注册到注册表中。
+     * 注册虚空群系。
      * <p>
-     * 由模组在数据包引导阶段调用，完成群系注册。
+     * 在数据包引导阶段将虚空群系注册到注册表中。
      *
      * @param context 数据包引导上下文
      */
