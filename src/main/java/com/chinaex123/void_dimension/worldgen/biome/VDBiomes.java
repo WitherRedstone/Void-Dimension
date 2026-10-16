@@ -16,18 +16,17 @@ import net.minecraft.world.level.biome.BiomeSpecialEffects;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 
 /**
- * 虚空维度生物群系定义类。
+ * 虚空维度群系定义。
  * <p>
- * 功能：
- * 1. 定义并注册虚空维度使用的 "void" 生物群系；
- * 2. 配置该群系的怪物生成规则、地形生成设置与视觉效果（天空、雾、水色等）。
+ * 负责构建并注册虚空维度所使用的群系，包括生物生成设置、
+ * 地形生成设置以及各类环境属性（天空、雾、水等颜色）。
  */
 public class VDBiomes {
 
     /** 虚空群系的资源键，用于在注册表中定位该群系 */
     public static final ResourceKey<Biome> VOID_BIOME = ResourceKey.create(Registries.BIOME,
             Identifier.fromNamespaceAndPath(VoidDimension.MOD_ID, "void_biome"));
-    
+
     /**
      * 构建虚空群系实例。
      *
@@ -71,9 +70,9 @@ public class VDBiomes {
     }
 
     /**
-     * 引导入口，将虚空群系注册到注册表中。
+     * 注册虚空群系。
      * <p>
-     * 由模组在数据包引导阶段调用，完成群系注册。
+     * 在数据包引导阶段将虚空群系注册到注册表中。
      *
      * @param context 数据包引导上下文
      */
