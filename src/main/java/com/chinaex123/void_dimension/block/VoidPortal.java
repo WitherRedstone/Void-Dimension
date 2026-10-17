@@ -1,12 +1,10 @@
 package com.chinaex123.void_dimension.block;
 
-import com.chinaex123.void_dimension.event.PortalDimensionHelper;
 import com.chinaex123.void_dimension.event.PortalTeleportManager;
 import com.chinaex123.void_dimension.event.VoidPortalClientHooks;
 import com.chinaex123.void_dimension.init.VDBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
@@ -14,26 +12,22 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Portal;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
-import org.jspecify.annotations.NonNull;
 
 /**
  * 虚空传送门方块。
  * <p>
- * 实现原版 Portal 接口，作为通往虚空维度的传送门：
- * 定义水平轴向属性、无碰撞的传送门形状，
+ * 虚空维度的传送门方块：定义水平轴向属性、无碰撞的传送门形状，
  * 并在实体进入时触发服务端传送逻辑与客户端视觉效果。
  */
-public class VoidPortal extends Block implements Portal {
+public class VoidPortal extends Block {
 
     /** 传送门朝向轴（水平轴） */
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
@@ -129,43 +123,6 @@ public class VoidPortal extends Block implements Portal {
         if (level.isClientSide()) {
             VoidPortalClientHooks.onPlayerInsidePortalClient();
         }
-    }
-
-    /**
-     * 获取本地过渡效果。
-     *
-     * @return 混乱（CONFUSION）过渡效果
-     */
-    @Override
-    public @NonNull Transition getLocalTransition() {
-        return Transition.CONFUSION;
-    }
-
-    /**
-     * 获取传送门过渡时间。
-     *
-     * @param level  服务端世界
-     * @param entity 实体
-     * @return 过渡所需刻数（80 刻）
-     */
-    @Override
-    public int getPortalTransitionTime(ServerLevel level, Entity entity) {
-        return 80;
-    }
-
-    /**
-     * 获取传送目的地。
-     * <p>
-     * 委托给维度辅助类，计算目标维度与落点。
-     *
-     * @param level    服务端世界
-     * @param entity   实体
-     * @param entryPos 进入传送门的位置
-     * @return 传送过渡对象
-     */
-    @Override
-    public TeleportTransition getPortalDestination(ServerLevel level, Entity entity, BlockPos entryPos) {
-        return PortalDimensionHelper.createTeleportTransition(level, entity, entryPos);
     }
 
     /**
