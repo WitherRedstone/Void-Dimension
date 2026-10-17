@@ -20,8 +20,8 @@ public class VDCreativeTabs {
                     .title(Component.translatable("itemGroup.void_dimension"))
                     .displayItems((parameters, output) -> {
 
-                        output.accept(VDBlocks.NAUGHT_STONE.get()); // 归墟基石
-                        output.accept(VDItems.NAUGHT_SHARD.get()); // 湮灭碎片
+                        output.accept(VDBlocks.NAUGHT_STONE.get());
+                        output.accept(VDItems.NAUGHT_SHARD.get());
 
                     })
                     .build());

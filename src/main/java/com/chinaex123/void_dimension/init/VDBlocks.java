@@ -15,17 +15,18 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.Supplier;
 
 public class VDBlocks {
-    // 创建方块注册器实例
     public static final DeferredRegister.Blocks BLOCK_REGISTER =
             DeferredRegister.createBlocks(VoidDimension.MOD_ID);
 
-    // 注册方块
+    /* 归墟基石 */
     public static final DeferredBlock<Block> NAUGHT_STONE =
             registerBlocks("naught_stone", () -> new Block(BlockBehaviour.Properties.of()
                     .strength(1.5F, 6.0F)
                     .mapColor(MapColor.STONE)
                     .sound(SoundType.STONE)
                     .requiresCorrectToolForDrops()));
+
+    /* 虚空传送门 */
     public static final DeferredBlock<Block> VOID_PORTAL =
             BLOCK_REGISTER.register("void_portal", () -> new VoidPortal(BlockBehaviour.Properties.of()
                     .noCollission()
@@ -34,19 +35,16 @@ public class VDBlocks {
                     .strength(-1.0F, 3600000.0F)));
 
 
-    // 注册一个方块物品到物品注册表中
     public static <T extends Block> void registerBlockItems(String name, DeferredBlock<T> block) {
         VDItems.ITEMS_REGISTER.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
     }
 
-    // 注册方块的同时注册方块物品
     public static <T extends Block> DeferredBlock<T> registerBlocks(String name, Supplier<T> block) {
         DeferredBlock<T> blocks = BLOCK_REGISTER.register(name, block);
         registerBlockItems(name, blocks);
         return blocks;
     }
 
-    // 注册到游戏
     public static void register(IEventBus eventBus){
         BLOCK_REGISTER.register(eventBus);
     }
