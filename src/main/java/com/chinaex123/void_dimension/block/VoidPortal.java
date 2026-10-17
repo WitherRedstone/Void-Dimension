@@ -50,7 +50,7 @@ public class VoidPortal extends Block implements Portal {
      * @param properties 方块属性
      */
     public VoidPortal(Properties properties) {
-        super(properties);
+        super(properties.noOcclusion());
         this.registerDefaultState(this.defaultBlockState().setValue(AXIS, Direction.Axis.X));
     }
 
@@ -122,8 +122,6 @@ public class VoidPortal extends Block implements Portal {
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity,
                              InsideBlockEffectApplier applier, boolean intersects) {
-        if (!intersects) return;
-
         if (!level.isClientSide() && entity instanceof ServerPlayer player) {
             PortalTeleportManager.beginPortalTeleport(player, pos);
         }
