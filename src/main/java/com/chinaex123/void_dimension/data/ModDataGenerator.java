@@ -36,5 +36,6 @@ public class ModDataGenerator {
         ));
 
         event.createProvider(ModBlockTagsProvider::new);
+        event.createProvider(ModModelsProvider::new);
     }
 }

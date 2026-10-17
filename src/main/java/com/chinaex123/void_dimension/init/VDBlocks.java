@@ -16,12 +16,14 @@ public class VDBlocks {
     public static final DeferredRegister.Blocks BLOCKS_REGISTER =
             DeferredRegister.createBlocks(VoidDimension.MOD_ID);
 
+    /* 归墟基石 */
     public static final DeferredBlock<Block> NAUGHT_STONE = registerBlock("naught_stone",
             properties -> new Block(properties.strength(1.5F, 6.0F)
                     .mapColor(MapColor.STONE)
                     .sound(SoundType.STONE)
                     .requiresCorrectToolForDrops()), true);
 
+    /* 虚空传送门 */
     public static final DeferredBlock<Block> VOID_PORTAL = registerBlock("void_portal",
             properties -> new VoidPortal(properties.noOcclusion()
                     .sound(SoundType.GLASS)
