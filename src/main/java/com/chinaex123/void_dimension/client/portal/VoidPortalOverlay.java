@@ -1,0 +1,67 @@
+package com.chinaex123.void_dimension.client.portal;
+
+import com.chinaex123.void_dimension.VoidDimension;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+
+/**
+ * 虚空传送门屏幕叠加层。
+ * <p>
+ * 在玩家进入传送门时，于屏幕最上层绘制一层逐渐增强的传送门贴图，
+ * 用于模拟传送门的视觉覆盖效果。绘制强度由客户端状态计时器决定。
+ */
+public final class VoidPortalOverlay {
+    private VoidPortalOverlay() {}
+
+    /** 方块纹理图集的位置标识 */
+    private static final ResourceLocation BLOCKS_ATLAS = ResourceLocation.withDefaultNamespace("textures/atlas/blocks.png");
+
+    /** 传送门叠加层使用的贴图 */
+    private static final ResourceLocation PORTAL_SPRITE = ResourceLocation.withDefaultNamespace("block/nether_portal");
+
+    /**
+     * 注册 GUI 图层。
+     * <p>
+     * 将传送门叠加层注册到所有图层之上，确保覆盖在其余界面之上绘制。
+     *
+     * @param event GUI 图层注册事件
+     */
+    public static void register(RegisterGuiLayersEvent event) {
+        event.registerAboveAll(
+                ResourceLocation.fromNamespaceAndPath(VoidDimension.MOD_ID, "portal_overlay"),
+                (graphics, deltaTracker) -> render(graphics)
+        );
+    }
+
+    /**
+     * 渲染传送门叠加层。
+     * <p>
+     * 根据当前传送门强度决定叠加层透明度，并将传送门贴图铺满整个屏幕。
+     * 若玩家不存在或强度为 0，则不进行绘制。
+     *
+     * @param graphics GUI 图形绘制上下文
+     */
+    private static void render(GuiGraphics graphics) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) return;
+
+        float intensity = VoidPortalClientState.getIntensity();
+        if (intensity <= 0.0f) return;
+
+        var textureManager = mc.getTextureManager();
+        if (!(textureManager.getTexture(BLOCKS_ATLAS) instanceof TextureAtlas atlas)) return;
+
+        TextureAtlasSprite sprite = atlas.getSprite(PORTAL_SPRITE);
+
+        int w = graphics.guiWidth();
+        int h = graphics.guiHeight();
+
+        float alpha = intensity * 0.75f;
+
+        graphics.blit(0, 0, 0, w, h, sprite, 1.0f, 1.0f, 1.0f, alpha);
+    }
+}

@@ -1,5 +1,7 @@
-package com.chinaex123.void_dimension.event;
+package com.chinaex123.void_dimension.block;
 
+import com.chinaex123.void_dimension.event.PortalTeleportManager;
+import com.chinaex123.void_dimension.event.VoidPortalClientHooks;
 import com.chinaex123.void_dimension.init.VDBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -44,7 +46,7 @@ public class VoidPortal extends Block {
      * @param properties 方块属性
      */
     public VoidPortal(Properties properties) {
-        super(properties);
+        super(properties.noOcclusion());
         this.registerDefaultState(this.defaultBlockState().setValue(AXIS, Direction.Axis.X));
     }
 
@@ -107,8 +109,12 @@ public class VoidPortal extends Block {
         if (entity instanceof ServerPlayer player && !level.isClientSide) {
             if (player.getBoundingBox().intersects(pos.getX(), pos.getY(), pos.getZ(),
                     pos.getX() + 1.0D, pos.getY() + 1.0D, pos.getZ() + 1.0D)) {
-                VoidPortalEventHandler.handlePortalTeleport(player, pos);
+                PortalTeleportManager.beginPortalTeleport(player, pos);
             }
+        }
+        // 客户端调用钩子
+        if (entity instanceof ServerPlayer) {
+            VoidPortalClientHooks.onPlayerInsidePortalClient();
         }
     }
 

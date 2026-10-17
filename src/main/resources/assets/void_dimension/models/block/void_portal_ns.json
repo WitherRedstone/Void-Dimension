@@ -1,4 +1,5 @@
 {
+  "render_type": "translucent",
   "textures": {
     "particle": "void_dimension:block/void_portal",
     "portal": "void_dimension:block/void_portal"
