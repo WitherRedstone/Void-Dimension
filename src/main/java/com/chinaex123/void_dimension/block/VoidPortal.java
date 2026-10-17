@@ -33,7 +33,7 @@ import org.jspecify.annotations.NonNull;
  * 定义水平轴向属性、无碰撞的传送门形状，
  * 并在实体进入时触发服务端传送逻辑与客户端视觉效果。
  */
-public class VoidPortal extends Block implements Portal {
+public class VoidPortal extends Block {
 
     /** 传送门朝向轴（水平轴） */
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
@@ -129,43 +129,6 @@ public class VoidPortal extends Block implements Portal {
         if (level.isClientSide()) {
             VoidPortalClientHooks.onPlayerInsidePortalClient();
         }
-    }
-
-    /**
-     * 获取本地过渡效果。
-     *
-     * @return 混乱（CONFUSION）过渡效果
-     */
-    @Override
-    public @NonNull Transition getLocalTransition() {
-        return Transition.CONFUSION;
-    }
-
-    /**
-     * 获取传送门过渡时间。
-     *
-     * @param level  服务端世界
-     * @param entity 实体
-     * @return 过渡所需刻数（80 刻）
-     */
-    @Override
-    public int getPortalTransitionTime(ServerLevel level, Entity entity) {
-        return 80;
-    }
-
-    /**
-     * 获取传送目的地。
-     * <p>
-     * 委托给维度辅助类，计算目标维度与落点。
-     *
-     * @param level    服务端世界
-     * @param entity   实体
-     * @param entryPos 进入传送门的位置
-     * @return 传送过渡对象
-     */
-    @Override
-    public TeleportTransition getPortalDestination(ServerLevel level, Entity entity, BlockPos entryPos) {
-        return PortalDimensionHelper.createTeleportTransition(level, entity, entryPos);
     }
 
     /**

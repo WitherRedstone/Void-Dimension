@@ -33,9 +33,6 @@ public final class PortalTeleportManager {
     /** 传送等待时间（tick） */
     public static final int PORTAL_WAIT_TICKS = 80;
 
-    /** 传送完成后设置的冷却（tick），防止玩家立即被传回 */
-    private static final int PORTAL_COOLDOWN_AFTER = 200;
-
     /** 待传送玩家队列：UUID → 待传送数据 */
     private static final Map<UUID, PendingTeleport> PENDING = new HashMap<>();
 
@@ -60,11 +57,7 @@ public final class PortalTeleportManager {
      */
     public static void beginPortalTeleport(ServerPlayer player, BlockPos portalPos) {
         UUID uuid = player.getUUID();
-
-        // 已在队列中，忽略
         if (PENDING.containsKey(uuid)) return;
-        // 冷却中，忽略
-        if (player.getPortalCooldown() > 0) return;
 
         Level currentLevel = player.level();
         ResourceKey<Level> currentDimension = currentLevel.dimension();
@@ -117,6 +110,12 @@ public final class PortalTeleportManager {
                 continue;
             }
 
+            // 玩家已离开触发传送的那个传送门方块，立刻取消传送
+            if (!isPlayerInThisPortal(player, pending.portalPos())) {
+                iterator.remove();
+                continue;
+            }
+
             int left = pending.ticksLeft() - 1;
             if (left > 0) {
                 // 用新实例替换
@@ -162,11 +161,23 @@ public final class PortalTeleportManager {
                 false
         );
 
-        // 传送完成后再设冷却，避免一进传送门就被锁
-        player.setPortalCooldown(PORTAL_COOLDOWN_AFTER);
-
         // 播放到达效果
         PortalEffectHelper.playArrivalEffects(player, targetPos);
+    }
+
+    /**
+     * 判断玩家 AABB 是否与 beginPortalTeleport 保存的那个具体 portalPos 方块相交。
+     *
+     * @param player    待查询的玩家
+     * @param portalPos 触发传送时的传送门方块位置
+     * @return 若玩家还在那个方块内则返回 true
+     */
+    private static boolean isPlayerInThisPortal(ServerPlayer player, BlockPos portalPos) {
+        var aabb = player.getBoundingBox();
+        return aabb.intersects(
+                portalPos.getX(), portalPos.getY(), portalPos.getZ(),
+                portalPos.getX() + 1.0D, portalPos.getY() + 1.0D, portalPos.getZ() + 1.0D
+        );
     }
 
     /**
