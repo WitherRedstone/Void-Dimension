@@ -30,14 +30,8 @@ public final class PortalTeleportManager {
     /** 传送等待时间（tick） */
     public static final int PORTAL_WAIT_TICKS = 80;
 
-    /** 传送完成后设置的冷却（tick） */
-    private static final int PORTAL_COOLDOWN_AFTER = 200;
-
     /** 待传送玩家队列：UUID → 待传送数据 */
     private static final Map<UUID, PendingTeleport> PENDING = new HashMap<>();
-
-    /** 停止传送后重复触发音效清除的合集 */
-    private static final Set<UUID> RECENTLY_CANCELLED = new HashSet<>();
 
     private record PendingTeleport(
             ServerPlayer player,
@@ -55,10 +49,7 @@ public final class PortalTeleportManager {
      */
     public static void beginPortalTeleport(ServerPlayer player, BlockPos portalPos) {
         UUID uuid = player.getUUID();
-
-        if (RECENTLY_CANCELLED.remove(uuid)) return;
         if (PENDING.containsKey(uuid)) return;
-        if (player.getPortalCooldown() > 0) return;
 
         Level currentLevel = player.level();
         ResourceKey<Level> currentDimension = currentLevel.dimension();
@@ -103,10 +94,9 @@ public final class PortalTeleportManager {
                 continue;
             }
 
-            // 玩家已离开传送门方块，立刻取消传送
-            if (!isPlayerInsideAnyPortal(player)) {
+            // 玩家已离开触发传送的那个传送门方块，立刻取消传送
+            if (!isPlayerInThisPortal(player, pending.portalPos())) {
                 iterator.remove();
-                RECENTLY_CANCELLED.add(player.getUUID());
                 continue;
             }
 
@@ -147,32 +137,22 @@ public final class PortalTeleportManager {
                 player.getXRot()
         );
 
-        player.setPortalCooldown(PORTAL_COOLDOWN_AFTER);
         PortalEffectHelper.playArrivalEffects(player, targetPos);
     }
 
     /**
-     * 判断玩家是否仍处于任意一个虚空传送门方块内。
+     * 判断玩家 AABB 是否与 beginPortalTeleport 保存的那个具体 portalPos 方块相交。
      *
-     * @param player 待查询的玩家
-     * @return 若玩家与某个虚空传送门方块相交则返回 true
+     * @param player    待查询的玩家
+     * @param portalPos 触发传送时的传送门方块位置
+     * @return 若玩家还在那个方块内则返回 true
      */
-    private static boolean isPlayerInsideAnyPortal(ServerPlayer player) {
-        Level level = player.level();
-        BlockPos playerPos = player.blockPosition();
+    private static boolean isPlayerInThisPortal(ServerPlayer player, BlockPos portalPos) {
         var aabb = player.getBoundingBox();
-        // 扫描玩家身体覆盖的方块
-        for (int dy = 0; dy <= 2; dy++) {
-            BlockPos checkPos = playerPos.offset(0, dy, 0);
-            if (level.getBlockState(checkPos).is(VDBlocks.VOID_PORTAL.get())) {
-                if (aabb.intersects(
-                        checkPos.getX(), checkPos.getY(), checkPos.getZ(),
-                        checkPos.getX() + 1.0D, checkPos.getY() + 1.0D, checkPos.getZ() + 1.0D)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return aabb.intersects(
+                portalPos.getX(), portalPos.getY(), portalPos.getZ(),
+                portalPos.getX() + 1.0D, portalPos.getY() + 1.0D, portalPos.getZ() + 1.0D
+        );
     }
 
     /**
