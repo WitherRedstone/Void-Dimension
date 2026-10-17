@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public class VDItems {
     public static final DeferredRegister.Items ITEMS_REGISTER = DeferredRegister.createItems(VoidDimension.MOD_ID);
 
+    /* 归墟碎片 */
     public static final DeferredItem<@NotNull Item> NAUGHT_SHARD = ITEMS_REGISTER.registerSimpleItem("naught_shard",
             props -> props.durability(4));
 
