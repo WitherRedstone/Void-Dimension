@@ -1,6 +1,7 @@
 package com.chinaex123.void_dimension.event;
 
 import com.chinaex123.void_dimension.VoidDimension;
+import com.chinaex123.void_dimension.init.VDBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -35,6 +36,9 @@ public final class PortalTeleportManager {
     /** 待传送玩家队列：UUID → 待传送数据 */
     private static final Map<UUID, PendingTeleport> PENDING = new HashMap<>();
 
+    /** 停止传送后重复触发音效清除的合集 */
+    private static final Set<UUID> RECENTLY_CANCELLED = new HashSet<>();
+
     private record PendingTeleport(
             ServerPlayer player,
             BlockPos portalPos,
@@ -52,6 +56,7 @@ public final class PortalTeleportManager {
     public static void beginPortalTeleport(ServerPlayer player, BlockPos portalPos) {
         UUID uuid = player.getUUID();
 
+        if (RECENTLY_CANCELLED.remove(uuid)) return;
         if (PENDING.containsKey(uuid)) return;
         if (player.getPortalCooldown() > 0) return;
 
@@ -98,6 +103,13 @@ public final class PortalTeleportManager {
                 continue;
             }
 
+            // 玩家已离开传送门方块，立刻取消传送
+            if (!isPlayerInsideAnyPortal(player)) {
+                iterator.remove();
+                RECENTLY_CANCELLED.add(player.getUUID());
+                continue;
+            }
+
             int left = pending.ticksLeft() - 1;
             if (left > 0) {
                 entry.setValue(new PendingTeleport(
@@ -137,6 +149,30 @@ public final class PortalTeleportManager {
 
         player.setPortalCooldown(PORTAL_COOLDOWN_AFTER);
         PortalEffectHelper.playArrivalEffects(player, targetPos);
+    }
+
+    /**
+     * 判断玩家是否仍处于任意一个虚空传送门方块内。
+     *
+     * @param player 待查询的玩家
+     * @return 若玩家与某个虚空传送门方块相交则返回 true
+     */
+    private static boolean isPlayerInsideAnyPortal(ServerPlayer player) {
+        Level level = player.level();
+        BlockPos playerPos = player.blockPosition();
+        var aabb = player.getBoundingBox();
+        // 扫描玩家身体覆盖的方块
+        for (int dy = 0; dy <= 2; dy++) {
+            BlockPos checkPos = playerPos.offset(0, dy, 0);
+            if (level.getBlockState(checkPos).is(VDBlocks.VOID_PORTAL.get())) {
+                if (aabb.intersects(
+                        checkPos.getX(), checkPos.getY(), checkPos.getZ(),
+                        checkPos.getX() + 1.0D, checkPos.getY() + 1.0D, checkPos.getZ() + 1.0D)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
