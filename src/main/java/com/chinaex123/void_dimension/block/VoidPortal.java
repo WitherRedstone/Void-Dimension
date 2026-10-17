@@ -50,7 +50,7 @@ public class VoidPortal extends Block implements Portal {
      * @param properties 方块属性
      */
     public VoidPortal(Properties properties) {
-        super(properties);
+        super(properties.noOcclusion());
         this.registerDefaultState(this.defaultBlockState().setValue(AXIS, Direction.Axis.X));
     }
 

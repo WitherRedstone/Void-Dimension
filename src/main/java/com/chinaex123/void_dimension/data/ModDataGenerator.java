@@ -22,5 +22,6 @@ public class ModDataGenerator {
         event.createProvider(ModRecipesProvider.Runner::new);
         event.createProvider(ModBlockTagsProvider::new);
         event.createProvider(ModWorldGenProvider::new);
+        event.createProvider(ModModelsProvider::new);
     }
 }
