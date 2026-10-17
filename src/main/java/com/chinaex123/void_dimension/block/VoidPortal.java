@@ -1,5 +1,7 @@
-package com.chinaex123.void_dimension.event;
+package com.chinaex123.void_dimension.block;
 
+import com.chinaex123.void_dimension.event.PortalTeleportManager;
+import com.chinaex123.void_dimension.event.VoidPortalClientHooks;
 import com.chinaex123.void_dimension.init.VDBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -31,9 +33,9 @@ public class VoidPortal extends Block {
     /** 传送门的水平轴向属性，只有 X 轴和 Z 轴两种取值 */
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 
-    /** 东西走向（X 轴）的碰撞箱，宽度 4 格 */
+    // 东西走向 - X轴
     protected static final VoxelShape X_AXIS_AABB = Block.box(6.0D, 0.0D, 0.0D, 10.0D, 16.0D, 16.0D);
-    /** 南北走向（Z 轴）的碰撞箱，宽度 4 格 */
+    // 南北走向 - Z轴
     protected static final VoxelShape Z_AXIS_AABB = Block.box(0.0D, 0.0D, 6.0D, 16.0D, 16.0D, 10.0D);
 
     /**
@@ -44,7 +46,7 @@ public class VoidPortal extends Block {
      * @param properties 方块属性
      */
     public VoidPortal(Properties properties) {
-        super(properties);
+        super(properties.noOcclusion());
         this.registerDefaultState(this.defaultBlockState().setValue(AXIS, Direction.Axis.X));
     }
 
@@ -105,11 +107,14 @@ public class VoidPortal extends Block {
     @Override
     public void entityInside(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Entity entity) {
         if (entity instanceof ServerPlayer player && !level.isClientSide) {
-            // 判断玩家碰撞箱是否与传送门方块所在的一格空间相交
             if (player.getBoundingBox().intersects(pos.getX(), pos.getY(), pos.getZ(),
                     pos.getX() + 1.0D, pos.getY() + 1.0D, pos.getZ() + 1.0D)) {
-                VoidPortalEventHandler.handlePortalTeleport(player, pos);
+                PortalTeleportManager.beginPortalTeleport(player, pos);
             }
+        }
+        // 客户端调用钩子
+        if (entity instanceof ServerPlayer) {
+            VoidPortalClientHooks.onPlayerInsidePortalClient();
         }
     }
 
