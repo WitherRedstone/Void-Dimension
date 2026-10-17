@@ -10,10 +10,10 @@ import net.minecraftforge.registries.RegistryObject;
 public interface VDItems {
     DeferredRegister<Item> ITEMS_REGISTER = DeferredRegister.create(ForgeRegistries.ITEMS, VoidDimension.MOD_ID);
 
+    /* 归墟碎片 */
     RegistryObject<Item> NAUGHT_SHARD = ITEMS_REGISTER.register("naught_shard",
             () -> new Item(new Item.Properties().durability(4)));
 
-    // 注册到游戏
     static void register(IEventBus eventBus){
         ITEMS_REGISTER.register(eventBus);
     }
